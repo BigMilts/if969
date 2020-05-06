@@ -145,8 +145,39 @@ class LinkedList:
             self._head = new_node
         self._size += 1
 
-    def insert_on_order(self):
-        pass
+    def insert_on_order(self, value):
+        """
+         this function insert a value on order in a already sorted list
+        :param value: a simple value
+        :return: if is a empty list, the default insert is called
+        """
+        if self._size == 0:
+            return self.insert(value)
+        cond = True
+        aux = self._head
+        prev = None
+        new_node = Node(value)
+        change = 0
+        while cond:
+            if value > aux.get_value():
+                if aux.get_next() is not None:
+                    prev = aux
+                    aux = aux.get_next()
+                    change += 1
+                else:
+                    cond = not cond
+            else:
+                cond = not cond
+        if change != 0:
+            if aux.get_next() is not None:
+                prev.set_next(new_node)
+                new_node.set_next(aux)
+            else:
+                aux.set_next(new_node)
+        else:
+            new_node.set_next(aux)
+            self._head = new_node
+        self._size += 1
 
     def sort(self):
         pass
