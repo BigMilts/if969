@@ -18,7 +18,7 @@ class LinkedList:
         self._size = 0
         if iterable is not None:
             for element in iterable:
-                self.add(element)
+                self.insert(element)
 
     def __str__(self) -> str:
         """
@@ -26,7 +26,7 @@ class LinkedList:
         """
         output = "( )"
         if self._head is not None:
-            counter = 0
+            counter = 1
             output = "( "
             for node in self:
                 if counter == 0:
@@ -66,8 +66,8 @@ class LinkedList:
 
     def __repr__(self):
         output = "LinkedList()"
-        if self._head is not None:
-            counter = 0
+        if self._head is not None and self._size > 1:
+            counter = 1
             output = output[:10]
             for node in self:
                 if counter == 0:
@@ -77,12 +77,62 @@ class LinkedList:
                 else:
                     output += f"{node}])"
                 counter += 1
+        elif self._size == 1:
+            output = f"LinkedList([{str(self._head)}])"
         return output
 
     def __getitem__(self, item):
-        pass
+        current = self._head
+        if item > self._size - 1:
+            raise IndexError
+        for i in range(item):
+            current = current.get_next()
+        return current
 
-    def add(self, value):
+    def __setitem__(self, key, value):
+        current = self.__getitem__(key)
+        current.set_value(value)
+        return self
+
+    def __delitem__(self, key):
+        if key > self._size - 1:
+            raise IndexError
+        current = self._head
+        if self._size > 1:
+            if key == 0:
+                self._head = current.get_next()
+            else:
+                current = self._head
+                for index in range(key):
+                    aux = current
+                    current = current.get_next()
+                if key < self._size:
+                    aux.set_next(current.get_next())
+                elif key == self._size - 1:
+                    aux.set_next(None)
+        else:
+            self._head = None
+        del current
+        self._size -= 1
+
+    def index_of(self, value):
+        """
+        :param value: a value which is or not is in the list
+        :return: the index of the value
+        """
+        index = counter = 0
+        is_inlist = False
+        if self._size > 1:
+            for node in self:
+                counter += 1
+                if node.get_value() == value:
+                    index = counter - 1
+                    is_inlist = not is_inlist
+            if not is_inlist:
+                raise ValueError
+        return index
+
+    def insert(self, value):
         """
         :param value: a new value to be inserted in the list
         """
@@ -91,6 +141,19 @@ class LinkedList:
             for node in self:
                 if node.get_next() is None:
                     node.set_next(new_node)
-                    self._size += 1
         else:
             self._head = new_node
+        self._size += 1
+
+    def insert_on_order(self):
+        pass
+
+    def sort(self):
+        pass
+
+    def pop(self, key):
+        """
+        :param key: the index
+        :return:
+        """
+        return self.__delitem__(key)
